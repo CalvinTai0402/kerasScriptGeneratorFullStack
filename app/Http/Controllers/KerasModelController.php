@@ -121,7 +121,7 @@ class KerasModelController extends Controller
      */
     public function destroy(KerasModel $kerasModel)
     {
-        $file = public_path("\\kerasModels\\" . $kerasModel->kerasModelFile);
+        $file = public_path("/kerasModels/" . $kerasModel->kerasModelFile);
         File::delete($file);
         $kerasModel->delete();
         return response()->json(["status" => 204]);
@@ -132,7 +132,7 @@ class KerasModelController extends Controller
         $selectedKerasModelIds = $request->selectedKerasModelIds;
         $kerasModelsToDelete = KerasModel::whereIn('id', $selectedKerasModelIds)->get();
         foreach ($kerasModelsToDelete as $kerasModelToDelete) {
-            $file = public_path("\\kerasModels\\" . $kerasModelToDelete->kerasModelFile);
+            $file = public_path("/kerasModels/" . $kerasModelToDelete->kerasModelFile);
             File::delete($file);
             $kerasModelToDelete->delete();
         }
@@ -141,7 +141,7 @@ class KerasModelController extends Controller
 
     public function downloadFile(KerasModel $kerasModel)
     {
-        $file = public_path("\\kerasModels\\" . $kerasModel->kerasModelFile);
+        $file = public_path("/kerasModels/" . $kerasModel->kerasModelFile);
         return response()->download($file);
     }
 }

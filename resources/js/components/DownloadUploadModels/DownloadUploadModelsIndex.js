@@ -146,8 +146,7 @@ class DownloadUploadModelsIndex extends React.Component {
                                             );
                                         case 'actions':
                                             return (
-                                                // <div style={{ display: "inline-block", justifyContent: "space-between" }}>
-                                                <div style={{ textAlign: 'center' }}>
+                                                <div style={{ display: "flex", justifyContent: "space-between" }}>
                                                     <button className="btn btn-primary" style={{ marginRight: "5px" }}>
                                                         <Link to={'downloadUploadModels/' + row.id + '/edit'}>
                                                             <AiFillEdit color="white" />
