@@ -80,7 +80,12 @@ class DownloadUploadModelsIndex extends React.Component {
     render() {
         const { deleting } = this.state;
         let self = this;
-        const url = `${process.env.MIX_API_URL}/kerasModel`;
+        let url = ""
+        if (process.env.APP_ENV === "production") {
+            url = `${process.env.MIX_API_URL}/kerasModel`;
+        } else {
+            url = `http://127.0.0.1:8000/kerasModel`;
+        }
         const columns = ['id', 'file_name', 'description', 'kerasModelFile', 'actions']
         let checkAllInput = (<input type="checkbox" ref={this.check_all} onChange={this.handleCheckboxTableAllChange} />);
         const options = {
