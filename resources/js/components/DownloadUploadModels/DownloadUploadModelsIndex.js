@@ -82,8 +82,8 @@ class DownloadUploadModelsIndex extends React.Component {
         let self = this;
         let url = ""
         console.log(process.env.MIX_API_URL)
-        console.log(process.env.MIX_APP_ENV)
-        if (process.env.MIX_APP_ENV === "production") {
+        console.log(process.env.APP_ENV)
+        if (process.env.APP_ENV === "production") {
             url = `${process.env.MIX_API_URL}/kerasModel`;
         } else {
             url = `http://127.0.0.1:8000/kerasModel`;
