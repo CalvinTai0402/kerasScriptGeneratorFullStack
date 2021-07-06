@@ -25,7 +25,7 @@ class DownloadUploadModelsCreate extends Component {
         if (this.isFormValid(this.state)) {
             this.setState({ loading: true });
             const id = this.props.match.params.id;
-            const res = await axios.put(`/kerasModels/${id}`, {
+            const res = await axios.put(`/kerasModel/${id}`, {
                 file_name: fileName,
                 description: description
             });
@@ -58,7 +58,7 @@ class DownloadUploadModelsCreate extends Component {
 
     async componentDidMount() {
         const id = this.props.match.params.id;
-        const res = await axios.get(`/kerasModels/${id}/edit`);
+        const res = await axios.get(`/kerasModel/${id}/edit`);
         this.setState({ fileName: res.data.kerasModel.file_name });
         this.setState({ description: res.data.kerasModel.description });
     }
@@ -93,12 +93,6 @@ class DownloadUploadModelsCreate extends Component {
                                         value={description}
                                         className={this.handleInputError(errors, "description")}
                                     />
-                                </Form.Field>
-                                <Form.Field>
-                                    <Button as="label" htmlFor="file" type="button">
-                                        Some button stuff
-                                    </Button>
-                                    <input type="file" id="file" style={{ display: "hidden" }} onChange={this.onChange} />
                                 </Form.Field>
                                 <Button
                                     disabled={loading}

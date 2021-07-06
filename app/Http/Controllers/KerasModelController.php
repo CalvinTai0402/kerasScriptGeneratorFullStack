@@ -53,8 +53,8 @@ class KerasModelController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'kerasModelFile' => 'required|file|mimes:zip|max:2048',
-                'kerasModelFile.*' => 'required|file|mimes:zip|max:2048'
+                'kerasModelFile' => 'required|file|mimes:zip|max:204800',
+                'kerasModelFile.*' => 'required|file|mimes:zip|max:204800'
             ]
         );
         if ($validator->fails()) {

@@ -16,7 +16,7 @@ class CreateKerasModelsTable extends Migration
         Schema::create('keras_models', function (Blueprint $table) {
             $table->id();
             $table->string('file_name');
-            $table->string('description');
+            $table->text('description');
             $table->string('kerasModelFile');
             $table->timestamps();
         });
