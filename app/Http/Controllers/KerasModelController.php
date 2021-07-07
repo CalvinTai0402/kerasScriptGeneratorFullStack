@@ -6,6 +6,8 @@ use App\Models\KerasModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Config;
 
 class KerasModelController extends Controller
 {
@@ -63,7 +65,11 @@ class KerasModelController extends Controller
         if ($request->has('kerasModelFile')) {
             $kerasModelFile = $request->file('kerasModelFile');
             $filename = date("Ymd_His", time()) . $kerasModelFile->getClientOriginalName();
-            $kerasModelFile->move('kerasModels/', $filename);
+            if (config('env.appEnv') == "local") {
+                $kerasModelFile->move('kerasModels/', $filename);
+            } elseif (config('env.appEnv') == "production") {
+                $kerasModelFile->storeAs('kerasModels/', $filename, 's3');
+            }
             KerasModel::create([
                 'file_name' => $request->input("file_name"),
                 'description' => $request->input("description"),
@@ -121,8 +127,12 @@ class KerasModelController extends Controller
      */
     public function destroy(KerasModel $kerasModel)
     {
-        $file = public_path("/kerasModels/" . $kerasModel->kerasModelFile);
-        File::delete($file);
+        if (config('env.appEnv') == "local") {
+            $file = public_path("/kerasModels/" . $kerasModel->kerasModelFile);
+            File::delete($file);
+        } elseif (config('env.appEnv') == "production") {
+            Storage::disk('s3')->delete('kerasModels/' . $kerasModel->kerasModelFile);
+        }
         $kerasModel->delete();
         return response()->json(["status" => 204]);
     }
@@ -132,8 +142,12 @@ class KerasModelController extends Controller
         $selectedKerasModelIds = $request->selectedKerasModelIds;
         $kerasModelsToDelete = KerasModel::whereIn('id', $selectedKerasModelIds)->get();
         foreach ($kerasModelsToDelete as $kerasModelToDelete) {
-            $file = public_path("/kerasModels/" . $kerasModelToDelete->kerasModelFile);
-            File::delete($file);
+            if (config('env.appEnv') == "local") {
+                $file = public_path("/kerasModels/" . $kerasModelToDelete->kerasModelFile);
+                File::delete($file);
+            } elseif (config('env.appEnv') == "production") {
+                Storage::disk('s3')->delete('kerasModels/' . $kerasModelToDelete->kerasModelFile);
+            }
             $kerasModelToDelete->delete();
         }
         return response()->json(['status' => 204, 'kerasModel' => $kerasModelsToDelete]);
@@ -141,7 +155,18 @@ class KerasModelController extends Controller
 
     public function downloadFile(KerasModel $kerasModel)
     {
-        $file = public_path("/kerasModels/" . $kerasModel->kerasModelFile);
-        return response()->download($file);
+        if (config('env.appEnv') == "local") {
+            $file = public_path("/kerasModels/" . $kerasModel->kerasModelFile);
+            return response()->download($file);
+        } elseif (config('env.appEnv') == "production") {
+            $file = Storage::disk('s3')->get('kerasModels/' . $kerasModel->kerasModelFile);
+            $headers = [
+                'Content-Type' => 'zip',
+                'Content-Description' => 'File Transfer',
+                'Content-Disposition' => "attachment; filename={$kerasModel->kerasModelFile}",
+                'filename' => $kerasModel->kerasModelFile
+            ];
+            return response($file, 200, $headers);;
+        }
     }
 }
