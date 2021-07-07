@@ -21,17 +21,22 @@ class DownloadUploadModelsCreate extends Component {
 
     handleUpdate = async event => {
         event.preventDefault();
-        const { fileName, description } = this.state;
-        if (this.isFormValid(this.state)) {
-            this.setState({ loading: true });
-            const id = this.props.match.params.id;
-            const res = await axios.put(`/kerasModel/${id}`, {
-                file_name: fileName,
-                description: description
-            });
-            if (res.data.status === 200) {
-                this.setState({ loading: false });
-                this.props.history.push("/downloadUploadModels");
+        let password = prompt("Please enter the password to update");
+        if (password !== process.env.MIX_UPDATE_KEY) {
+            alert("You are not allowed to update this!")
+        } else {
+            const { fileName, description } = this.state;
+            if (this.isFormValid(this.state)) {
+                this.setState({ loading: true });
+                const id = this.props.match.params.id;
+                const res = await axios.put(`/kerasModel/${id}`, {
+                    file_name: fileName,
+                    description: description
+                });
+                if (res.data.status === 200) {
+                    this.setState({ loading: false });
+                    this.props.history.push("/downloadUploadModels");
+                }
             }
         }
     };

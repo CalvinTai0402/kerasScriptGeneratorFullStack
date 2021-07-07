@@ -43,7 +43,7 @@ class ExampleGenerator extends React.Component {
         const element = document.createElement("a");
         const file = new Blob([this.state.utility], { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
-        element.download = "example.py";
+        element.download = "utilities.py";
         document.body.appendChild(element); // Required for this to work in FireFox
         element.click();
     }
