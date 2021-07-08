@@ -12,6 +12,7 @@ class DownloadUploadModelsIndex extends React.Component {
         kerasModelsIDs: [],
         isAllChecked: false,
         deleting: false,
+        downloading: false,
     };
 
     check_all = React.createRef();
@@ -66,6 +67,7 @@ class DownloadUploadModelsIndex extends React.Component {
     }
 
     handleDownload = async (downloadId) => {
+        this.setState({ downloading: true })
         const res = await axios.get(`kerasModel/${downloadId}/downloadFile`, {
             responseType: 'blob',
         });
@@ -75,10 +77,11 @@ class DownloadUploadModelsIndex extends React.Component {
         link.setAttribute('download', 'kerasModel.zip');
         document.body.appendChild(link);
         link.click();
+        this.setState({ downloading: false })
     }
 
     render() {
-        const { deleting } = this.state;
+        const { deleting, downloading } = this.state;
         let self = this;
         let url = ""
         if (process.env.MIX_APP_ENV === "production") {
@@ -126,7 +129,7 @@ class DownloadUploadModelsIndex extends React.Component {
                     </div>
                 </button>
                 {
-                    deleting ? <Spinner /> :
+                    deleting ? <Spinner text="Deleting..." /> : downloading ? <Spinner text="Downloading..." /> :
                         <ServerTable columns={columns} url={url} options={options} bordered hover updateUrl>
                             {
                                 function (row, column) {
