@@ -1006,3 +1006,134 @@ for layer_name, layer_activation in zip(layer_names, activations):
 
 # Train on colab: https://research.google.com/colaboratory/
 `
+
+export const wordEmbeddingsTextLearning = `# Get the text data and output an example
+!curl -O https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz
+!tar -xf aclImdb_v1.tar.gz
+!rm -r aclImdb/train/unsup
+!cat aclImdb/train/pos/4077_10.txt
+
+import numpy as np
+import tensorflow as tf
+import os, pathlib, shutil, random
+from tensorflow import keras
+from tensorflow.keras import layers
+from tensorflow.keras.layers.experimental.preprocessing import TextVectorization
+
+# Preprocess the data and create a validation set
+base_dir = pathlib.Path("aclImdb")
+val_dir = base_dir / "val"
+train_dir = base_dir / "train"
+for category in ("neg", "pos"):
+    os.makedirs(val_dir / category)
+    files = os.listdir(train_dir / category)
+    random.Random(1337).shuffle(files)
+    num_val_samples = int(0.2 * len(files))
+    val_files = files[-num_val_samples:]
+    for fname in val_files:
+        shutil.move(train_dir / category / fname,
+                    val_dir / category / fname)
+batch_size = 32
+train_ds = keras.preprocessing.text_dataset_from_directory(
+    "aclImdb/train", batch_size=batch_size
+)
+val_ds = keras.preprocessing.text_dataset_from_directory(
+    "aclImdb/val", batch_size=batch_size
+)
+test_ds = keras.preprocessing.text_dataset_from_directory(
+    "aclImdb/test", batch_size=batch_size
+)
+text_only_train_ds = train_ds.map(lambda x, y: x)
+
+# Define a convenient way to get a model
+def get_model(max_tokens=20000, hidden_dim=16):
+    inputs = keras.Input(shape=(max_tokens,))
+    x = layers.Dense(hidden_dim, activation="relu")(inputs)
+    x = layers.Dropout(0.5)(x)
+    outputs = layers.Dense(1, activation="sigmoid")(x)
+    model = keras.Model(inputs, outputs)
+    model.compile(optimizer="rmsprop",
+                  loss="binary_crossentropy",
+                  metrics=["accuracy"])
+    return model
+
+max_length = 600
+max_tokens = 20000
+text_vectorization = TextVectorization(
+    max_tokens=max_tokens, # most frequent words
+    output_mode="int",
+    output_sequence_length=max_length, # longest length allowed for each sentence
+)
+text_vectorization.adapt(text_only_train_ds)
+int_train_ds = train_ds.map(lambda x, y: (text_vectorization(x), y)) # map x to text_vectorization(x) = map string to int
+int_val_ds = val_ds.map(lambda x, y: (text_vectorization(x), y))
+int_test_ds = test_ds.map(lambda x, y: (text_vectorization(x), y))
+
+# Train a model using an embedding layer
+inputs = keras.Input(shape=(None,), dtype="int64")
+embedded = layers.Embedding(
+    input_dim=max_tokens, output_dim=256, mask_zero=True)(inputs)
+x = layers.Bidirectional(layers.LSTM(32))(embedded)
+x = layers.Dropout(0.5)(x)
+outputs = layers.Dense(1, activation="sigmoid")(x)
+model = keras.Model(inputs, outputs)
+model.compile(optimizer="rmsprop",
+              loss="binary_crossentropy",
+              metrics=["accuracy"])
+model.summary()
+callbacks = [keras.callbacks.ModelCheckpoint("saved_model",save_best_only=True)]
+model.fit(int_train_ds, validation_data=int_val_ds, epochs=10, callbacks=callbacks)
+model = keras.models.load_model("saved_model")
+print(f"Test acc: {model.evaluate(int_test_ds)[1]:.3f}")
+
+# Now we train using a pretrained embedding layer
+# Download the pretrained embeddings
+!wget http://nlp.stanford.edu/data/glove.6B.zip
+!unzip -q glove.6B.zip
+
+# Preprocess the word embeddings
+path_to_glove_file = "glove.6B.100d.txt"
+embeddings_index = {}
+with open(path_to_glove_file) as f:
+    for line in f:
+        word, coefs = line.split(maxsplit=1)
+        coefs = np.fromstring(coefs, "f", sep=" ")
+        embeddings_index[word] = coefs
+print(f"Found {len(embeddings_index)} word vectors.")
+
+# Convert the embeddings to a layer that we can use
+embedding_dim = 100
+vocabulary = text_vectorization.get_vocabulary()
+word_index = dict(zip(vocabulary, range(len(vocabulary))))
+embedding_matrix = np.zeros((max_tokens, embedding_dim))
+for word, i in word_index.items():
+    # if i < max_tokens:
+    embedding_vector = embeddings_index.get(word)
+    if embedding_vector is not None:
+        embedding_matrix[i] = embedding_vector
+embedding_layer = layers.Embedding(
+    max_tokens,
+    embedding_dim,
+    embeddings_initializer=keras.initializers.Constant(embedding_matrix),
+    trainable=False,
+    mask_zero=True,
+)
+
+# Train the model using a pretrained embedding layer
+inputs = keras.Input(shape=(None,), dtype="int64")
+embedded = embedding_layer(inputs)
+x = layers.Bidirectional(layers.LSTM(32))(embedded)
+x = layers.Dropout(0.5)(x)
+outputs = layers.Dense(1, activation="sigmoid")(x)
+model = keras.Model(inputs, outputs)
+model.compile(optimizer="rmsprop",
+              loss="binary_crossentropy",
+              metrics=["accuracy"])
+model.summary()
+callbacks = [keras.callbacks.ModelCheckpoint("saved_model", save_best_only=True)]
+model.fit(int_train_ds, validation_data=int_val_ds, epochs=10, callbacks=callbacks)
+model = keras.models.load_model("saved_model")
+print(f"Test acc: {model.evaluate(int_test_ds)[1]:.3f}")
+
+# Train on colab: https://research.google.com/colaboratory/
+`

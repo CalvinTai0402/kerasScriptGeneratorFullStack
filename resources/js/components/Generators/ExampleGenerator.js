@@ -4,7 +4,8 @@ import Stage from "../Stage"
 import {
     MNISTCategoricalClassification, MNISTCategoricalClassificationWithCNN, IMDBBinaryClassification,
     BostonHousingRegression, MNISTCategoricalClassificationWithTransferLearningAndFineTuning,
-    OxfordPetsImageSegmentation, heatMapGeneration, activationVisualization, TemperatureForecastingWithRNNs
+    OxfordPetsImageSegmentation, heatMapGeneration, activationVisualization, TemperatureForecastingWithRNNs,
+    wordEmbeddingsTextLearning
 } from "../example"
 
 class ExampleGenerator extends React.Component {
@@ -40,6 +41,9 @@ class ExampleGenerator extends React.Component {
                 break;
             case "TemperatureForecastingWithRNNs":
                 this.setState({ example: TemperatureForecastingWithRNNs })
+                break;
+            case "wordEmbeddingsTextLearning":
+                this.setState({ example: wordEmbeddingsTextLearning })
                 break;
             default:
                 this.setState({ example: MNISTCategoricalClassification })

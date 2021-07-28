@@ -86,3 +86,26 @@ model = get_model()
 model.fit(data, ...)
 test_score = model.evaluate(test_data, ...)
 `
+
+export const standardizingTokenizingIndexingText = `# The way TextVectorization preprocesses text data is "toLower() and remove punctuation"
+from tensorflow.keras.layers.experimental.preprocessing import TextVectorization
+text_vectorization = TextVectorization(
+    ngrams=2, # how many grams for bag of words
+    max_tokens=10000, # most frequent words
+    output_mode="int", # options include "int", "count", "binary", "tf-idf"
+)
+dataset = [
+    "I write, erase, rewrite",
+    "Erase again, and then",
+    "A poppy blooms.",
+]
+text_vectorization.adapt(dataset)
+print(text_vectorization.get_vocabulary())
+vocabulary = text_vectorization.get_vocabulary()
+test_sentence = "I write, rewrite, and still rewrite again"
+encoded_sentence = text_vectorization(test_sentence)
+print(encoded_sentence)
+inverse_vocab = dict(enumerate(vocabulary))
+decoded_sentence = " ".join(inverse_vocab[int(i)] for i in encoded_sentence)
+print(decoded_sentence)
+`

@@ -14,9 +14,10 @@ use App\Http\Controllers\KerasModelController;
 |
 */
 
-Route::get('/', function () {
-    return view('reactApp');
-});
+// Route::get('/', function () {
+//     return view('reactApp');
+// });
 Route::resource("kerasModel", KerasModelController::class);
 Route::post("kerasModel/deleteMany",  [KerasModelController::class, 'destroyMany'])->name('kerasModels.destroyMany');
 Route::get("kerasModel/{kerasModel}/downloadFile",  [KerasModelController::class, 'downloadFile'])->name('kerasModels.downloadFile');
+Route::view('/{path?}', 'reactApp')->where('path', '.*')->name('reactApp');

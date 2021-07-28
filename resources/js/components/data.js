@@ -127,6 +127,7 @@ export const layers = [
             { name: 'keras.layers.GRU(32, recurrent_dropout=0.25)', value: 'keras.layers.GRU(32, recurrent_dropout=0.25)' },
             { name: 'keras.layers.GRU(32, recurrent_dropout=0.25, unroll=True)', value: 'keras.layers.GRU(32, recurrent_dropout=0.25, unroll=True)' },
             { name: 'keras.layers.GRU(32, recurrent_dropout=0.25, return_sequences=True)', value: 'keras.layers.GRU(32, recurrent_dropout=0.25, return_sequences=True)' },
+            { name: 'keras.layers.Bidirectional(keras.layers.LSTM(16))', value: 'keras.layers.Bidirectional(keras.layers.LSTM(16))' },
         ]
     },
 ]
@@ -157,6 +158,11 @@ export const examples = [
             { name: 'activationVisualization', value: 'activationVisualization' }
         ]
     },
+    {
+        name: 'Time Series', type: 'group', items: [
+            { name: 'wordEmbeddingsTextLearning', value: 'wordEmbeddingsTextLearning' },
+        ]
+    }
 ]
 
 export const utilities = [
@@ -166,7 +172,8 @@ export const utilities = [
     { name: 'standardization', value: 'standardization' },
     { name: 'normalization', value: 'normalization' },
     { name: 'kFoldCrossValidation', value: 'kFoldCrossValidation' },
-    { name: 'iterativeKFoldCrossValidation', value: 'iterativeKFoldCrossValidation' },]
+    { name: 'iterativeKFoldCrossValidation', value: 'iterativeKFoldCrossValidation' },
+    { name: 'standardizingTokenizingIndexingText', value: 'standardizingTokenizingIndexingText' },]
 
 export const callbacks = [
     { name: 'keras.callbacks.EarlyStopping(monitor="val_sparse_categorical_accuracy",patience=3)', value: 'keras.callbacks.EarlyStopping(monitor="val_sparse_categorical_accuracy",patience=3)' },
