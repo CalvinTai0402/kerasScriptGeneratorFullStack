@@ -24,3 +24,10 @@ Notes for DL:
     [1], [2], [3] - sparse_categorical_crossentropy.
 
 7.  Word embeddings are much more efficient that simply one-hot encoded vectors for text.
+
+8.  Factoring outputs into multiple independent spaces, adding residual connections, adding normalization layers
+    should be leveraged in any complex model.
+
+9.  Use LayerNormalization instead of BatchNormalization for sequence data.
+
+10. if numSample/meanSampleLength > 1500: Use sequence models. Else: Use bag-of-bigrams models.

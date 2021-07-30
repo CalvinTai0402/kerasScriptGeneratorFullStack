@@ -5,7 +5,7 @@ import {
     MNISTCategoricalClassification, MNISTCategoricalClassificationWithCNN, IMDBBinaryClassification,
     BostonHousingRegression, MNISTCategoricalClassificationWithTransferLearningAndFineTuning,
     OxfordPetsImageSegmentation, heatMapGeneration, activationVisualization, TemperatureForecastingWithRNNs,
-    wordEmbeddingsTextLearning
+    wordEmbeddingsTextLearning, englishToSpanishTranslation
 } from "../example"
 
 class ExampleGenerator extends React.Component {
@@ -44,6 +44,9 @@ class ExampleGenerator extends React.Component {
                 break;
             case "wordEmbeddingsTextLearning":
                 this.setState({ example: wordEmbeddingsTextLearning })
+                break;
+            case "englishToSpanishTranslation":
+                this.setState({ example: englishToSpanishTranslation })
                 break;
             default:
                 this.setState({ example: MNISTCategoricalClassification })

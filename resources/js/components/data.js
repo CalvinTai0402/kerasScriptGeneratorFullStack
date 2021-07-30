@@ -128,6 +128,9 @@ export const layers = [
             { name: 'keras.layers.GRU(32, recurrent_dropout=0.25, unroll=True)', value: 'keras.layers.GRU(32, recurrent_dropout=0.25, unroll=True)' },
             { name: 'keras.layers.GRU(32, recurrent_dropout=0.25, return_sequences=True)', value: 'keras.layers.GRU(32, recurrent_dropout=0.25, return_sequences=True)' },
             { name: 'keras.layers.Bidirectional(keras.layers.LSTM(16))', value: 'keras.layers.Bidirectional(keras.layers.LSTM(16))' },
+            { name: 'keras.layers.LayerNormalization()', value: 'keras.layers.LayerNormalization()' },
+            { name: 'keras.layers.GlobalAveragePooling1D()', value: 'keras.layers.GlobalAveragePooling1D()' },
+            { name: 'keras.layers.Dropout(0.1)', value: 'keras.layers.Dropout(0.1)' },
         ]
     },
 ]
@@ -161,6 +164,7 @@ export const examples = [
     {
         name: 'Time Series', type: 'group', items: [
             { name: 'wordEmbeddingsTextLearning', value: 'wordEmbeddingsTextLearning' },
+            { name: 'englishToSpanishTranslation', value: 'englishToSpanishTranslation' },
         ]
     }
 ]
