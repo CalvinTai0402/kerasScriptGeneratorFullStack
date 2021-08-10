@@ -166,7 +166,12 @@ export const examples = [
             { name: 'wordEmbeddingsTextLearning', value: 'wordEmbeddingsTextLearning' },
             { name: 'englishToSpanishTranslation', value: 'englishToSpanishTranslation' },
         ]
-    }
+    },
+    {
+        name: 'Hyperparameter', type: 'group', items: [
+            { name: 'hyperParameterTuning', value: 'hyperParameterTuning' },
+        ]
+    },
 ]
 
 export const utilities = [
@@ -177,7 +182,10 @@ export const utilities = [
     { name: 'normalization', value: 'normalization' },
     { name: 'kFoldCrossValidation', value: 'kFoldCrossValidation' },
     { name: 'iterativeKFoldCrossValidation', value: 'iterativeKFoldCrossValidation' },
-    { name: 'standardizingTokenizingIndexingText', value: 'standardizingTokenizingIndexingText' },]
+    { name: 'standardizingTokenizingIndexingText', value: 'standardizingTokenizingIndexingText' },
+    { name: 'mixedPrecision', value: 'mixedPrecision' },
+    { name: 'TPUConnection', value: 'TPUConnection' },
+]
 
 export const callbacks = [
     { name: 'keras.callbacks.EarlyStopping(monitor="val_sparse_categorical_accuracy",patience=3)', value: 'keras.callbacks.EarlyStopping(monitor="val_sparse_categorical_accuracy",patience=3)' },

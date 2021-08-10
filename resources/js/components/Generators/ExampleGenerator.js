@@ -5,7 +5,7 @@ import {
     MNISTCategoricalClassification, MNISTCategoricalClassificationWithCNN, IMDBBinaryClassification,
     BostonHousingRegression, MNISTCategoricalClassificationWithTransferLearningAndFineTuning,
     OxfordPetsImageSegmentation, heatMapGeneration, activationVisualization, TemperatureForecastingWithRNNs,
-    wordEmbeddingsTextLearning, englishToSpanishTranslation
+    wordEmbeddingsTextLearning, englishToSpanishTranslation, hyperParameterTuning
 } from "../example"
 
 class ExampleGenerator extends React.Component {
@@ -47,6 +47,9 @@ class ExampleGenerator extends React.Component {
                 break;
             case "englishToSpanishTranslation":
                 this.setState({ example: englishToSpanishTranslation })
+                break;
+            case "hyperParameterTuning":
+                this.setState({ example: hyperParameterTuning })
                 break;
             default:
                 this.setState({ example: MNISTCategoricalClassification })

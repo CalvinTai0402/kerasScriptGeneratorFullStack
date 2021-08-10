@@ -3,7 +3,8 @@ import Stage from "../Stage"
 import UtilitiesDropDown from "../DropDowns/UtilitiesDropdown"
 import {
     colabFileUploadDownload, shuffleData, trainValTestSplit, standardization, normalization,
-    kFoldCrossValidation, iterativeKFoldCrossValidation, standardizingTokenizingIndexingText
+    kFoldCrossValidation, iterativeKFoldCrossValidation, standardizingTokenizingIndexingText,
+    mixedPrecision, TPUConnection
 } from "../utilities"
 
 class ExampleGenerator extends React.Component {
@@ -36,6 +37,12 @@ class ExampleGenerator extends React.Component {
                 break;
             case "standardizingTokenizingIndexingText":
                 this.setState({ utility: standardizingTokenizingIndexingText })
+                break;
+            case "mixedPrecision":
+                this.setState({ utility: mixedPrecision })
+                break;
+            case "TPUConnection":
+                this.setState({ utility: TPUConnection })
                 break;
             default:
                 this.setState({ utility: colabFileUploadDownload })

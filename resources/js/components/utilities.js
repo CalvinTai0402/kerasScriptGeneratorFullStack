@@ -109,3 +109,17 @@ inverse_vocab = dict(enumerate(vocabulary))
 decoded_sentence = " ".join(inverse_vocab[int(i)] for i in encoded_sentence)
 print(decoded_sentence)
 `
+
+export const mixedPrecision = `# This will speed up training essentially for free
+from tensorflow import keras
+keras.mixed_precision.set_global_policy("mixed_float16")
+`
+
+export const TPUConnection = `# Note that using Colab's TPU, files stored on disk can't be used
+# Work around: train from data on memory/ use Google Cloud Storage
+import tensorflow as tf
+tpu = tf.distribute.cluster_resolver.TPUClusterResolver()
+print("Device:", tpu.master())
+tf.config.experimental_connect_to_cluster(tpu)
+tf.tpu.experimental.initialize_tpu_system(tpu)
+`
